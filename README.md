@@ -1,6 +1,6 @@
 # Face Detection using Haar Cascades with OpenCV and Matplotlib
-## Name : Vignesh R
-## Ref No: 212223240177
+## Name: Vignesh R
+## Reg.No: 212223240177
 ## Aim
 
 To write a Python program using OpenCV to perform the following image manipulations:  
@@ -55,36 +55,42 @@ iv) Perform face detection with label in real-time video from webcam.
 - Step 5: Exit loop and close windows when ESC key (key code 27) is pressed  
 - Step 6: Release video capture and destroy all OpenCV windows  
 
-## Program :
-
+## Program:
 ```
 import numpy as np
 import cv2 
 import matplotlib.pyplot as plt
-%matplotlib inline
+model = cv2.imread('image_01.png',0)
 withglass = cv2.imread('image_02.png',0)
-group = cv2.imread('image_03.jpeg',0)
+group = cv2.imread('image_03.png',0)
+plt.imshow(model,cmap='gray')
+plt.show()
 plt.imshow(withglass,cmap='gray')
 plt.show()
 plt.imshow(group,cmap='gray')
 plt.show()
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 def detect_face(img):
+    
+  
     face_img = img.copy()
+  
     face_rects = face_cascade.detectMultiScale(face_img) 
     
     for (x,y,w,h) in face_rects: 
-        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 2) 
+        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 10) 
         
     return face_img
-
 result = detect_face(withglass)
 plt.imshow(result,cmap='gray')
 plt.show()
 result = detect_face(group)
 plt.imshow(result,cmap='gray')
 plt.show()
-
+# Gets errors!
+result = detect_face(group)
+plt.imshow(result,cmap='gray')
+plt.show()
 def adj_detect_face(img):
     
     face_img = img.copy()
@@ -92,13 +98,13 @@ def adj_detect_face(img):
     face_rects = face_cascade.detectMultiScale(face_img,scaleFactor=1.2, minNeighbors=5) 
     
     for (x,y,w,h) in face_rects: 
-        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 2) 
+        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 10) 
         
     return face_img
+# Doesn't detect the side face.
 result = adj_detect_face(group)
 plt.imshow(result,cmap='gray')
 plt.show()
-
 eye_cascade = cv2.CascadeClassifier('haarcascade_eye.xml')
 def detect_eyes(img):
     
@@ -108,36 +114,49 @@ def detect_eyes(img):
     
     
     for (x,y,w,h) in eyes: 
-        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 2) 
+        cv2.rectangle(face_img, (x,y), (x+w,y+h), (255,255,255), 10) 
         
     return face_img
 result = detect_eyes(model)
 plt.imshow(result,cmap='gray')
 plt.show()
 eyes = eye_cascade.detectMultiScale(withglass)
+# White around the pupils is not distinct enough to detect Denis' eyes here!
 result = detect_eyes(withglass)
 plt.imshow(result,cmap='gray')
 plt.show()
+cap = cv2.VideoCapture(0)
+
+# Set up matplotlib
+plt.ion()
+fig, ax = plt.subplots()
+
+ret, frame = cap.read(0)
+frame = detect_face(frame)
+im = ax.imshow(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+plt.title('Video Face Detection')
+
+while True:
+    ret, frame = cap.read(0)
+
+    frame = detect_face(frame)
+
+    # Update matplotlib image
+    im.set_data(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+    plt.pause(0.10)
+cap.release()
+plt.close()
 ```
+## Output:
+<img width="565" height="527" alt="image" src="https://github.com/user-attachments/assets/66033fa7-bd52-4561-8f25-7a75798d310c" />
 
-## Output :
+<img width="707" height="435" alt="image" src="https://github.com/user-attachments/assets/3a29ddbe-aabf-4a8b-bbcd-1c11432a993a" />
 
-### INPUT IMAGES :
+<img width="773" height="441" alt="image" src="https://github.com/user-attachments/assets/83986d17-14a7-4d5b-a8ff-db1bcbd1f52c" />
 
-![image](https://github.com/user-attachments/assets/00ea77ea-8e44-4a29-89bc-3c910959bae5)
+<img width="445" height="517" alt="image" src="https://github.com/user-attachments/assets/8fc074e8-41e0-4e9c-80ba-992fa18efc33" />
 
-![image](https://github.com/user-attachments/assets/45db3a00-f9e5-4ca7-9e46-ced3afc1cb0a)
+<img width="570" height="531" alt="image" src="https://github.com/user-attachments/assets/2f12de67-ede7-465d-aeea-ef210cda9382" />
 
-### FACE DETECTION :
-
-![image](https://github.com/user-attachments/assets/30d19b40-2f43-4988-bf6f-6d67113ac6cd)
-
-![image](https://github.com/user-attachments/assets/1d612beb-8648-4eb2-9295-9ea48d9852e0)
-
-### EYE DETECTION :
-
-![image](https://github.com/user-attachments/assets/d2239d93-723f-423f-808c-ec06fe957518)
-
-## Result :
-
-Thus, to write a Python program using OpenCV to perform image manipulations for the given objectives is executed sucessfully.
+## Result:
+Thus the given objective of face detection is done sucessfully.
